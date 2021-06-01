@@ -1,0 +1,29 @@
+1) Rest api register
+url => http://localhost/learn_jwt_token/ApiCustomerMarTest/register
+
+param => {
+	"username" : "rohit",
+	"email" : "rohit@yopmail.com",
+	"surname" : "ghodeshwar",
+	"phone" : 1235689548,
+	"gender" : "male"
+}
+
+2) Rest api login 
+url => http://localhost/learn_jwt_token/ApiCustomerMarTest/login
+
+param : {
+	"username" : "rohit",
+	"email" : "rohit@yopmail.com"
+}
+
+3)Headers :
+Content-Type => application/json
+x-api-key => Your Generated Api Key
+Token => use "firebase/php-jwt" package its firebase
+
+4) use postman
+
+5) users.sql file import first pleace check inside main folder
+
+6) use your credentials to connect with your database
