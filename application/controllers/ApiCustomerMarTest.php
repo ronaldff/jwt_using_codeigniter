@@ -59,13 +59,15 @@
         if($this->checkMethod()){
           if($this->postData){
             if(empty($this->postData['username']) || empty($this->postData['email'])){
+              http_response_code(500);
               $res['status'] = 500;
               $res['message'] = 'All fields are mandatory';
             } else {
               $this->db->where('email', $this->postData['email']);
               $result = $this->db->get("users")->num_rows();
               if($result > 0){
-                $res['status'] = 404;
+                http_response_code(302);
+                $res['status'] = 302;
                 $res['message'] = "Email Exist...";
               } else {
                 $n=10;
@@ -111,21 +113,25 @@
                   $res['status'] = 200;
                   $res['message'] = 'Data inserted successfully.';
                 } else {
+                  http_response_code(500);
                     $res['status'] = 500;
                     $res['message'] = 'Something went wrong!!';
                 }
               }
             }
           } else {
+            http_response_code(500);
             $res['status'] = 500;
             $res['message'] = 'Something went wrong!!';
           }
         } else {
-          $res['status'] = 500;
+          http_response_code(405);
+          $res['status'] = 405;
           $res['message'] = 'Wrong http method selected : ' . $_SERVER['REQUEST_METHOD'];
         }
       } else {
-        $res['status'] = 500;
+        http_response_code(401);
+        $res['status'] = 401;
         $res['message'] = 'Invalid API key';
       }
 
@@ -164,15 +170,18 @@
             $res['status'] = 200;
             $res['message'] = 'Login successfully';
           } else {
-            $res['status'] = 202;
+            http_response_code(400);
+            $res['status'] = 400;
             $res['message'] = 'Please check the credentials';
           }
         } else {
-          $res['status'] = 500;
+          http_response_code(405);
+          $res['status'] = 405;
           $res['message'] = 'Wrong http method selected : ' . $_SERVER['REQUEST_METHOD'];
         }
       } else {
-        $res['status'] = 500;
+        http_response_code(401);
+        $res['status'] = 401;
         $res['message'] = 'Invalid API key';
       }
       
@@ -190,10 +199,10 @@
      * 
      * 
      ******/
-    // private function generateApiKey(){
-    //   $n = 20;
-    //   return getRandomKey($n);
-    // }
+    private function generateApiKey(){
+      $n = 20;
+      return getRandomKey($n);
+    }
 
     // public function getApiKey(){
     //   echo base64_encode($this->generateApiKey());
