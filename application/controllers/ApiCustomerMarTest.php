@@ -189,6 +189,91 @@
       echo json_encode($res);
     }
 
+    public function updateProfile()
+    {
+      $res = array();
+
+      if($this->isvalidApi){
+        if($this->isValid){
+          if($this->checkMethod()){
+            if($this->postData){
+              $data = array();
+              if(isset($this->postData['gender']) && !empty($this->postData['gender'])){
+                $data['gender'] = $this->postData['gender'];
+              }
+              if(isset($this->postData['username']) && !empty($this->postData['username'])){
+                $data['username'] = $this->postData['username'];
+                
+              }
+              if(isset($this->postData['email']) && !empty($this->postData['email'])){
+                $data['email'] = $this->postData['email'];
+
+              }
+              if(isset($this->postData['phone']) && !empty($this->postData['phone'])){
+                $data['phone'] = $this->postData['phone'];
+                
+              }
+              if(isset($this->postData['surname']) && !empty($this->postData['surname'])){
+                $data['surname'] = $this->postData['surname'];
+              }
+
+              if(!empty($data)){
+                if (update('users', $data, ['id' => $this->postData['id']])) {
+                  $this->db->select(['username','email','surname','gender','phone','created_at']);
+                    $this->db->where('id', $this->postData['id']);
+                    $user_data = $this->db->get("users")->row_array();
+          
+                    $user = array(
+                      'username' => $user_data['username'], 
+                      'email' => $user_data['email'],
+                      'surname' => $user_data['surname'],
+                      'gender' => $user_data['gender'],
+                      'phone' => $user_data['phone'],
+                      'created_at' => $user_data['created_at']
+                    );
+                  $res['status'] = 200;
+                  $res['message'] = 'Profile updated successfully';
+                  $res['user_data'] = $user;
+                } else {
+  
+                  http_response_code(500);
+                  $res['status'] = 500;
+                  $res['message'] = 'Something went wrong!!';
+                }
+              } else {
+                http_response_code(404);
+                $res['status'] = 404;
+                $res['message'] = 'Please provide value to update';
+              }
+              
+            } else {
+              http_response_code(500);
+              $res['status'] = 500;
+              $res['message'] = 'Something went wrong!!';
+            }
+
+          } else {
+            http_response_code(405);
+            $res['status'] = 405;
+            $res['message'] = 'Wrong http method selected : ' . $_SERVER['REQUEST_METHOD'];
+          }
+
+        } else {
+          http_response_code(401);
+          $res['status'] = 401;
+          $res['message'] = 'Authentication failed token is not valid';
+        }
+        
+      } else {
+        http_response_code(401);
+        $res['status'] = 401;
+        $res['message'] = 'Invalid API key';
+      }
+
+      echo json_encode($res);
+
+    }
+
     /****
      * 
      * 
